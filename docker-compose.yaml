@@ -1,0 +1,45 @@
+version: '3.7'
+
+services:
+
+  routeros-6-46:
+    image: evilfreelancer/docker-routeros:6.46.5
+    cap_add:
+        - NET_ADMIN
+    devices:
+        - /dev/net/tun
+    ports:
+        - "22222:22"
+        - "22223:23"
+        - "28728:8728"
+        - "28729:8729"
+        - "8080:80"
+        - "8292:8292"
+    networks:
+      profiler_net:
+        ipv4_address: 172.42.1.6
+      
+  influxdb:
+    build:
+        context: ./influxdb
+        dockerfile: dockerfile
+    ports:
+        - 8086:8086
+    environment:
+        - INFLUX_USER=biga
+        - INFLUX_BUCKET_NAME=biga
+        - INFLUX_PSW=bigabiga
+        - INFLUX_TOKEN=kakaroto
+        - INFLUX_RETENTION_TIME=0
+        - INFLUX_ORG=biga
+    networks:
+      profiler_net:
+        ipv4_address: 172.42.1.8
+  
+networks:
+  profiler_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.42.0.0/16
+    attachable: true

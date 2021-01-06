@@ -1,0 +1,2 @@
+influxdb-client==1.13.0
+librouteros==3.0.0

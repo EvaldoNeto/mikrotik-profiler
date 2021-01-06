@@ -1,0 +1,7 @@
+FROM quay.io/influxdb/influxdb:v2.0.3
+
+RUN apt-get update && \
+    apt install -y netcat-openbsd
+
+COPY ./influx_setup.sh /usr/bin/influx_setup
+RUN chmod +x /usr/bin/influx_setup
