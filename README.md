@@ -52,4 +52,6 @@ Now you can access localhost:8086 and see data being registered in the database
 As a simple example there is a file name test_api.py, you can run it indefinitely and check the graphic to see how the given api call impact the mikrotik CPU usage
 
 
-ps: You can check all database temporary variables in the docker-compose file. 
+## Influx variables
+
+All influx variables are defined in the file influx-variables.env. Change them as you need/want

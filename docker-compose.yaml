@@ -25,13 +25,15 @@ services:
         dockerfile: dockerfile
     ports:
         - 8086:8086
-    environment:
-        - INFLUX_USER=biga
-        - INFLUX_BUCKET_NAME=biga
-        - INFLUX_PSW=bigabiga
-        - INFLUX_TOKEN=kakaroto
-        - INFLUX_RETENTION_TIME=0
-        - INFLUX_ORG=biga
+    env_file:
+        - influx-variables.env
+    #environment:
+    #    - INFLUX_USER=$INFLUX_USER
+    #    - INFLUX_BUCKET_NAME=$INFLUX_BUCKET_NAME
+    #    - INFLUX_PSW=$INFLUX_PSW
+    #    - INFLUX_TOKEN=$INFLUX_TOKEN
+    #    - INFLUX_RETENTION_TIME=$INFLUX_RETENTION_TIME
+    #    - INFLUX_ORG=$INFLUX_ORG
     networks:
       profiler_net:
         ipv4_address: 172.42.1.8
