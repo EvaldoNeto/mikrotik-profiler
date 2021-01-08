@@ -49,9 +49,29 @@ Now you can access localhost:8086 and see data being registered in the database
 
 ## API tests
 
-As a simple example there is a file name test_api.py, you can run it indefinitely and check the graphic to see how the given api call impact the mikrotik CPU usage
+Run
+
+```
+python profile.py --api your_api_call --time 0.5
+```
+
+time is the time to wait between two api calls, you can pass the -h flag for help
+
+```
+python profile.py -h
+```
+
+As for now there are three options for the api argument
+
+- interface_print
+- interface_get
+- interface_ethernet_print
 
 
 ## Influx variables
 
 All influx variables are defined in the file influx-variables.env. Change them as you need/want
+
+## Mikrotik variables
+
+There is a mikrotik-variables.env file with the mikrotik connection information. You should point to your mikrotik with the proper user and password

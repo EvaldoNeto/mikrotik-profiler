@@ -5,11 +5,10 @@ the database
 
 from librouteros import connect
 from librouteros.login import plain
-from librouteros.query import Key
-from librouteros.exceptions import TrapError
 
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
+from load_config import load_influx_vars, load_mikrotik_vars
 
 import socket
 import time
@@ -18,9 +17,21 @@ def mk_connect():
     """
     simple function to connect to a mikrotik and return a timeout error
     """
-    method = plain
+    mk_vars = load_mikrotik_vars()
+    username = mk_vars["USERNAME"]
+    password = mk_vars["PASSWORD"]
+    host = mk_vars["HOST"]
+    timeout = mk_vars["TIMEOUT"]
+    port = mk_vars["API_PORT"]
     try:
-        api = connect(username="admin", password="", host="localhost", login_method=plain, timeout=10, port=28728)
+        api = connect(
+            username=username,
+            password=password,
+            host=host,
+            login_method=plain,
+            timeout=timeout,
+            port=port
+        )
         return api
     except socket.timeout as err:
         # when the api timeouts it raises a socket.timeout error, here we re-raise it to be used afterwards
@@ -34,13 +45,16 @@ def save_data(data):
     usage = float(data['usage'])
     section = data['.section']
 
-    bucket = "biga_bucket"
-    token = "kakaroto"
-    client = InfluxDBClient(url="http://localhost:8086", token=token, org="biga")
+    influx_vars = load_influx_vars()
+    bucket = influx_vars["INFLUX_BUCKET_NAME"]
+    token = influx_vars["INFLUX_TOKEN"]
+    org = influx_vars["INFLUX_ORG"]
+
+    client = InfluxDBClient(url="http://localhost:8086", token=token, org=org)
 
     write_api = client.write_api(write_options=SYNCHRONOUS)
     # p = Point("mikrotik_profile").tag("name", name).tag('section', section).field("usage2", usage)
-    p = Point("mikrotik_profile").tag("name", name).field("usage2", usage)
+    p = Point("mikrotik_profile").tag("name", name).field("usage", usage)
 
     write_api.write(bucket=bucket, record=p)
 

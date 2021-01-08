@@ -6,6 +6,11 @@ from api import api_calls
 from mikrotik import Mikrotik
 from ipaddress import IPv4Address
 
+from influx import save_data
+
+from load_config import load_influx_vars, load_mikrotik_vars
+
+
 def init_argparse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         usage="%(prog)s [OPTIONS]",
@@ -15,10 +20,10 @@ def init_argparse() -> argparse.ArgumentParser:
         "--api",
         help="the api to be called",
         required=True,
-        choices=["interface_print", "interface_get"]
+        choices=["interface_print", "interface_get", "interface_ethernet_print"]
     )
             
-    parser.add_argument("-t", "--time", help="the time between two api calls", type=int, default=5)
+    parser.add_argument("-t", "--time", help="the time between two api calls", type=float, default=5)
     return parser
 
 def main() -> None:
@@ -26,10 +31,19 @@ def main() -> None:
     args = parser.parse_args()
 
     query = api_calls(args.api)
+
+    mk_vars = load_mikrotik_vars()
+    username = mk_vars["USERNAME"]
+    password = mk_vars["PASSWORD"]
+    host = mk_vars["HOST"]
+    timeout = mk_vars["TIMEOUT"]
+    port = mk_vars["API_PORT"]
     mk_args = {
-        "host_ip": IPv4Address("192.168.0.14"),
-        "username": "admin",
-        "password": ""
+        "host_ip": IPv4Address(host),
+        "username": username,
+        "password": password,
+        "apiPort": port,
+        "timeout": timeout
     }
     mk = Mikrotik(**mk_args)
     try:

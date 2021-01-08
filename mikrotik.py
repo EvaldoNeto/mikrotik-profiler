@@ -14,58 +14,10 @@ from librouteros.login import plain, token
 from librouteros import connect
 from librouteros.exceptions import TrapError
 
-from enum import Enum
 
+from mk_types import MkBool, LoginMethod, MkStatus
+from mk_errors import QueryException, MKLoginError
 
-class QueryException(Exception):
-    def __init__(self, *args):
-        if args:
-            self.message = args[0]
-        else:
-            self.message = None
-
-    def __str__(self):
-        if self.message:
-            return 'QueryException, {0} '.format(self.message)
-        else:
-            return 'QueryException has been raised'
-
-
-class MKLoginError(Exception):
-    def __init__(self, *args):
-        if args:
-            self.message = args[0]
-        else:
-            self.message = None
-
-    def __str__(self):
-        if self.message:
-            return 'MKLoginError, {0} '.format(self.message)
-        else:
-            return 'MKLoginError has been raised'
-
-
-class MkBool(str, Enum):
-    """
-    'Boolean' for the mikrotik configuration
-    """
-    no = 'no'
-    yes = 'yes'
-
-
-class LoginMethod(str, Enum):
-    """
-    """
-    plain = 'plain'
-    token = 'token'
-
-
-class MkStatus(str, Enum):
-    """
-    Indicator of failure or success when calling the api
-    """
-    success = 'success'
-    fail = 'fail'
 
 class Mikrotik(BaseModel):
     """

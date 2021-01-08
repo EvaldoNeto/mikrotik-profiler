@@ -16,7 +16,11 @@ def api_calls(api_name: str) -> dict:
             "args": {
                 "number": "ether1"
             }
-        }
+        },        
+        "interface_ethernet_print": {
+            "query": "/interface/ethernet/print",
+            "args": {}
+        },
     }
 
     return apis[api_name]
